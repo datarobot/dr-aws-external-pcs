@@ -1,10 +1,10 @@
 output "atlasclusterstring" {
-  value = mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster[0].connection_strings
+  value = mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster.connection_strings
 }
 
 # Private link connection string in srv format
 output "plstring" {
-  value = mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster[0].connection_strings[0].private_srv
+  value = mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster.connection_strings[0].private_srv
 }
 
 output "secret_arns" {
@@ -28,5 +28,5 @@ output "mongo_atlas_project_id" {
 }
 
 output "mongo_atlas_cluster_name" {
-  value = var.monolith_saas ? mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster[0].name : mongodbatlas_cluster.aws_mongo_atlas_cluster[0].name
+  value = mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster.name
 }

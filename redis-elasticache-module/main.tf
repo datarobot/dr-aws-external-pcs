@@ -58,7 +58,7 @@ resource "aws_elasticache_replication_group" "datarobot" {
 resource "aws_security_group" "elasticache_redis_group" {
   name        = join("-", [var.vpcname, "elasticache_redis_group"])
   description = "Security Group for AWS elasticache"
-  vpc_id      = var.vpc.id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "HTTP"

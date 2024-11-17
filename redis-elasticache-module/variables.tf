@@ -37,7 +37,7 @@ variable "num_node_groups" {
   type        = number
 }
 
-variable "vpc" {
+variable "vpc_id" {
   description = "VPC object"
   type        = any
 }

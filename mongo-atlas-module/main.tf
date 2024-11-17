@@ -6,8 +6,8 @@ provider "mongodbatlas" {
 
 # Mongo atlas project to be created in Datarobot org - org id does not change
 resource "mongodbatlas_project" "aws_mongo_atlas_project" {
-  name   = "${var.atlas_project_name}-${var.env}"
-  org_id = var.atlas_org_id
+  name                              = "${var.atlas_project_name}-${var.env}"
+  org_id                            = var.atlas_org_id
   is_extended_storage_sizes_enabled = var.extended_storage_size
 }
 
@@ -21,32 +21,26 @@ resource "mongodbatlas_advanced_cluster" "aws_mongo_atlas_cluster" {
   version_release_system         = "LTS"
   backup_enabled                 = true
   replication_specs {
-    num_shards        = var.atlas_num_shards
+    num_shards = var.atlas_num_shards
     region_configs {
-      provider_name   = "AWS"
-      region_name     = upper(replace(var.atlas_region, "-", "_"))
-      priority        = 7
-    electable_specs {
-      instance_size = var.atlas_instance_type
-      node_count    = 3
+      provider_name = "AWS"
+      region_name   = upper(replace(var.atlas_region, "-", "_"))
+      priority      = 7
+      electable_specs {
+        instance_size = var.atlas_instance_type
+        node_count    = 3
+      }
+      auto_scaling {
+        disk_gb_enabled = true
+      }
     }
-  auto_scaling { 
-     disk_gb_enabled   = true
   }
-   analytics_specs {
-     instance_size = var.analytics_node_instance_type
-     ebs_volume_type = "STANDARD"
-     node_count      = 1
-     disk_size_gb    = var.atlas_disk_size
-  }
-}
-}
   advanced_configuration {
     javascript_enabled           = false
     minimum_enabled_tls_protocol = "TLS1_2"
   }
-  mongo_db_major_version         = var.atlas_mongodb_version
-  disk_size_gb                   = var.atlas_disk_size
+  mongo_db_major_version = var.atlas_mongodb_version
+  disk_size_gb           = var.atlas_disk_size
   lifecycle {
     ignore_changes = [disk_size_gb]
   }
@@ -55,7 +49,7 @@ resource "mongodbatlas_advanced_cluster" "aws_mongo_atlas_cluster" {
 # Backup schedule for mongo atlas cluster
 resource "mongodbatlas_cloud_backup_schedule" "aws_mongo_atlas_automated_cloud_backup" {
   project_id   = mongodbatlas_project.aws_mongo_atlas_project.id
-  cluster_name = var.monolith_saas ? mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster[0].name : mongodbatlas_cluster.aws_mongo_atlas_cluster[0].name
+  cluster_name = mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster.name
 
   policy_item_hourly {
     frequency_interval = 6 #accepted values = 1, 2, 4, 6, 8, 12 -> every n hours
@@ -86,7 +80,7 @@ resource "mongodbatlas_cloud_backup_schedule" "aws_mongo_atlas_automated_cloud_b
       "MONTHLY",
     "ON_DEMAND"]
     region_name         = "US_WEST_2"
-    replication_spec_id = var.monolith_saas ? mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster[0].replication_specs.*.id[0] : mongodbatlas_cluster.aws_mongo_atlas_cluster[0].replication_specs.*.id[0]
+    replication_spec_id = mongodbatlas_advanced_cluster.aws_mongo_atlas_cluster.replication_specs.*.id[0]
     should_copy_oplogs  = true
   }
 }

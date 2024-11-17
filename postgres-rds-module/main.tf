@@ -1,7 +1,7 @@
 resource "aws_db_subnet_group" "database_subnets" {
   name       = "${var.project_name}-postgres-rds-db"
-  subnet_ids = var.database_subnets.*.id
-  tags = var.tags
+  subnet_ids = var.database_subnets
+  tags       = var.tags
 }
 
 module "rds_postgres" {
@@ -31,7 +31,7 @@ module "rds_postgres" {
   db_name                         = "postgres"
   password                        = random_password.postgres.result
   port                            = "5432"
-  subnet_ids                      = [var.database_subnets[0].id, var.database_subnets[1].id]
+  subnet_ids                      = var.database_subnets
   publicly_accessible             = false
   maintenance_window              = "Mon:00:00-Mon:03:00"
   backup_window                   = "03:00-06:00"
@@ -70,7 +70,7 @@ resource "aws_secretsmanager_secret_version" "postgres_password" {
 resource "aws_security_group" "rds_database_group" {
   name        = join("-", [var.vpcname, "-", var.project_name, "-rds-sec-group"])
   description = "Security Group for AWS RDS"
-  vpc_id      = var.vpc.id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "allow psql"

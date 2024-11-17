@@ -18,7 +18,7 @@ variable "instance_type" {
   type        = string
 }
 
-variable "vpc" {
+variable "vpc_id" {
   description = "VPC object"
   type        = any
 }
