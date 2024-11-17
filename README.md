@@ -75,7 +75,7 @@
 
 ## Modules
 
-No modules.
+Mongo Atlas 
 
 ## Resources
 
@@ -163,7 +163,7 @@ No modules.
 
 ## Modules
 
-No modules.
+Redis Elasticache
 
 ## Resources
 
